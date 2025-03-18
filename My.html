@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMS Bomber by Rimon</title>
+    <style>
+        body {
+            background-color: #f2f5f7;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 60px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 15px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f1f1;
+            border-radius: 8px;
+            color: #333;
+            font-size: 14px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>SMS Bomber</h1>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" placeholder="01XXXXXXXXX">
+        </div>
+
+        <div class="form-group">
+            <label for="amount">SMS Amount</label>
+            <input type="number" id="amount" placeholder="Enter SMS count">
+        </div>
+
+        <div class="form-group">
+            <label for="message">Enter your message</label>
+            <textarea id="message" rows="3" placeholder="Type your message"></textarea>
+        </div>
+
+        <button onclick="sendSMS()">Send SMS</button>
+
+        <div class="response" id="responseBox">Response will appear here...</div>
+    </div>
+
+    <div class="footer">
+        Developed by <strong>Rimon Hossain</strong><br>
+        <a href="https://t.me/rimonhossainoffical" target="_blank">Join Telegram Channel</a>
+    </div>
+
+    <script>
+        async function sendSMS() {
+            const phone = document.getElementById('phone').value.trim();
+            const amount = parseInt(document.getElementById('amount').value);
+            const message = document.getElementById('message').value.trim();
+
+            if (!phone || !amount || amount < 1 || !message) {
+                alert("Please fill out all fields correctly!");
+                return;
+            }
+
+            document.getElementById('responseBox').innerText = "Sending SMS...";
+
+            const promises = [];
+            for (let i = 0; i < amount; i++) {
+                const formData = new URLSearchParams();
+                formData.append('phone', phone);
+                formData.append('message', message);
+
+                promises.push(
+                    fetch('http://tasks2earn.shop', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: formData.toString()
+                    })
+                    .then(response => response.text())
+                    .catch(error => {
+                        return 'Error: ' + error;
+                    })
+                );
+            }
+
+            try {
+                await Promise.all(promises);
+                document.getElementById('responseBox').innerText = "All SMS Sent Successfully!";
+            } catch (error) {
+                document.getElementById('responseBox').innerText = 'Error: ' + error;
+            }
+        }
+    </script>
+
+</body>
+</html>
